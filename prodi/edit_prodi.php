@@ -1,12 +1,21 @@
 <?php
+session_start();
+// CEK LOGIN
+if (!isset($_SESSION['nim'])) {
+    header("Location: ../mahasiswa/login.php");
+    exit();
+}
+
 include "koneksi_akademik.php";
 
 if (!isset($_GET['id'])) {
-    header("Location: index_prodi.php");
+    header("Location: prodi.php");
     exit;
 }
 
 $id = (int) $_GET['id'];
+
+// Ambil data prodi
 $stmt = $db->prepare("SELECT * FROM prodi WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
@@ -14,7 +23,7 @@ $result = $stmt->get_result();
 $data = $result->fetch_assoc();
 
 if (!$data) {
-    echo "Data tidak ditemukan!";
+    echo "Data program studi tidak ditemukan!";
     exit;
 }
 ?>
@@ -56,6 +65,18 @@ if (!$data) {
     </style>
 </head>
 <body>
+    <!-- NAVBAR SEDERHANA -->
+    <nav class="navbar navbar-dark" style="background: linear-gradient(90deg, #10b981 0%, #059669 100%);">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="../mahasiswa/index.php">
+                <i class="bi bi-mortarboard-fill me-2"></i>Sistem Akademik
+            </a>
+            <span class="navbar-text text-white">
+                <i class="bi bi-person-circle me-1"></i><?php echo $_SESSION['nama']; ?>
+            </span>
+        </div>
+    </nav>
+
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
@@ -80,6 +101,7 @@ if (!$data) {
                         <div class="mb-4">
                             <label class="form-label">Jenjang</label>
                             <select name="jenjang" class="form-select" required>
+                                <option value="D2" <?= $data['jenjang']=='D2'?'selected':''; ?>>D2</option>
                                 <option value="D3" <?= $data['jenjang']=='D3'?'selected':''; ?>>D3</option>
                                 <option value="D4" <?= $data['jenjang']=='D4'?'selected':''; ?>>D4</option>
                                 <option value="S1" <?= $data['jenjang']=='S1'?'selected':''; ?>>S1</option>
@@ -90,9 +112,7 @@ if (!$data) {
                         <!-- Keterangan -->
                         <div class="mb-5">
                             <label class="form-label">Keterangan</label>
-                            <textarea class="form-control" name="keterangan" rows="3" required>
-                                <?= htmlspecialchars($data['keterangan']); ?>
-                            </textarea>
+                            <textarea class="form-control" name="keterangan" rows="3" required><?= htmlspecialchars($data['keterangan']); ?></textarea>
                         </div>
 
                         <!-- Tombol -->

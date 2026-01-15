@@ -1,4 +1,11 @@
 <?php
+session_start();
+// CEK LOGIN
+if (!isset($_SESSION['nim'])) {
+    header("Location: ../mahasiswa/login.php");
+    exit();
+}
+
 include "koneksi_akademik.php";
 
 if (!isset($_POST['update'])) {
@@ -30,7 +37,7 @@ if (!$stmt) {
 }
 
 $stmt->bind_param("sssi", $nama_prodi, $jenjang, $keterangan, $id);
-//.
+
 if ($stmt->execute()) {
     header("Location: prodi.php?pesan=sukses_update");
 } else {
@@ -40,3 +47,4 @@ if ($stmt->execute()) {
 $stmt->close();
 $db->close();
 exit;
+?>

@@ -1,3 +1,11 @@
+<?php
+session_start();
+// CEK LOGIN
+if (!isset($_SESSION['nim'])) {
+    header("Location: ../mahasiswa/login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -41,6 +49,18 @@
     </style>
 </head>
 <body>
+    <!-- NAVBAR SEDERHANA -->
+    <nav class="navbar navbar-dark" style="background: linear-gradient(90deg, #10b981 0%, #059669 100%);">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="../mahasiswa/index.php">
+                <i class="bi bi-mortarboard-fill me-2"></i>Sistem Akademik
+            </a>
+            <span class="navbar-text text-white">
+                <i class="bi bi-person-circle me-1"></i><?php echo $_SESSION['nama']; ?>
+            </span>
+        </div>
+    </nav>
+
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
@@ -73,6 +93,7 @@
                                 </span>
                                 <select name="jenjang" class="form-select" required>
                                     <option value="">-- Pilih Jenjang --</option>
+                                    <option value="D2">D2</option>
                                     <option value="D3">D3</option>
                                     <option value="D4">D4</option>
                                     <option value="S1">S1</option>

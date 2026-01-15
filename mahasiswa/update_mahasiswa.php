@@ -4,18 +4,19 @@ include "koneksi_akademik.php";
 if (isset($_POST['update'])) {
 
     $nim        = $_POST['nim'];
-    $nama       = $_POST['nama_mahasiswa'];
+    $nama       = trim($_POST['nama_mahasiswa']);
     $prodi_id   = $_POST['prodi_id'];
     $tgl        = $_POST['tanggal_lahir'];
-    $alamat     = $_POST['alamat'];
+    $alamat     = trim($_POST['alamat']);
 
-
+    // Validasi
     if (empty($nim) || empty($nama) || empty($prodi_id) || empty($tgl) || empty($alamat)) {
+        // PERBAIKAN: Kembali ke edit dengan pesan error
         header("Location: edit_mahasiswa.php?nim=$nim&pesan=kosong");
         exit();
     }
 
-    // Query Update (PAKAI prodi_id)
+    // Query Update
     $sql = "UPDATE mahasiswa 
             SET nama_mahasiswa = ?, 
                 prodi_id = ?, 
@@ -26,23 +27,27 @@ if (isset($_POST['update'])) {
     $stmt = $db->prepare($sql);
 
     if ($stmt) {
-        // s = string, i = integer
         $stmt->bind_param("sissi", $nama, $prodi_id, $tgl, $alamat, $nim);
 
         if ($stmt->execute()) {
-            header("Location: mahasiswa.php?pesan=sukses_update");
+            // PERBAIKAN: Redirect ke index.php bukan mahasiswa.php
+            header("Location: index.php?pesan=sukses_update");
             exit();
         } else {
-            header("Location: mahasiswa.php?pesan=gagal");
+            // PERBAIKAN: Redirect ke index.php bukan mahasiswa.php
+            header("Location: index.php?pesan=gagal");
             exit();
         }
 
         $stmt->close();
     } else {
         echo "Error database: " . $db->error;
+        echo "<br><a href='edit_mahasiswa.php?nim=$nim'>Kembali ke Edit</a>";
+        exit();
     }
 } else {
-    header("Location: mahasiswa.php");
+    // PERBAIKAN: Redirect ke index.php bukan mahasiswa.php
+    header("Location: index.php");
     exit();
 }
 

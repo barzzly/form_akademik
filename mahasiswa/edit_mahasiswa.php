@@ -1,8 +1,9 @@
 <?php
 include "koneksi_akademik.php";
 
+// PERBAIKAN: Redirect ke index.php bukan mahasiswa.php
 if (!isset($_GET['nim'])) {
-    header("Location: mahasiswa.php");
+    header("Location: index.php");
     exit();
 }
 
@@ -58,6 +59,9 @@ $prodi = $db->query("SELECT id, nama_prodi FROM prodi ORDER BY nama_prodi ASC");
         .bg-light {
             background-color: #f8f9fa !important;
         }
+        textarea.form-control {
+            min-height: 100px;
+        }
     </style>
 </head>
 <body>
@@ -111,14 +115,13 @@ $prodi = $db->query("SELECT id, nama_prodi FROM prodi ORDER BY nama_prodi ASC");
                         <!-- Alamat -->
                         <div class="mb-5">
                             <label class="form-label">Alamat</label>
-                            <textarea class="form-control" name="alamat" rows="3" required>
-                                <?= htmlspecialchars($data['alamat']); ?>
-                            </textarea>
+                            <textarea class="form-control" name="alamat" rows="3" required><?= htmlspecialchars(trim($data['alamat'])); ?></textarea>
                         </div>
 
                         <!-- Tombol -->
                         <div class="d-flex justify-content-between align-items-center pt-3 border-top">
-                            <a href="mahasiswa.php" class="btn btn-outline-secondary">
+                            <!-- PERBAIKAN: Kembali ke index.php bukan mahasiswa.php -->
+                            <a href="index.php" class="btn btn-outline-secondary">
                                 <i class="bi bi-x-circle me-2"></i>Batal
                             </a>
                             <button type="submit" name="update" class="btn btn-success">

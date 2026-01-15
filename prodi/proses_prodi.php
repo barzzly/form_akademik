@@ -1,4 +1,11 @@
 <?php
+session_start();
+// CEK LOGIN
+if (!isset($_SESSION['nim'])) {
+    header("Location: ../mahasiswa/login.php");
+    exit();
+}
+
 include "koneksi_akademik.php";
 
 if (!isset($_POST['submit'])) {
@@ -10,7 +17,7 @@ if (!isset($_POST['submit'])) {
 $nama_prodi = trim($_POST['nama_prodi'] ?? '');
 $jenjang    = trim($_POST['jenjang'] ?? '');
 $keterangan = trim($_POST['keterangan'] ?? '');
-//.
+
 // Validasi
 if ($nama_prodi === '' || $jenjang === '' || $keterangan === '') {
     header("Location: create_prodi.php?pesan=kosong");
@@ -37,3 +44,4 @@ if ($stmt->execute()) {
 $stmt->close();
 $db->close();
 exit;
+?>
